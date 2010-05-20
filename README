@@ -17,3 +17,7 @@ what works
 * allow passing parameters by marking parameters with @net.java.dev.rapt.sam.As
 * generate multi-line strings with net.java.dev.generator.LongString 
 * provide net.java.dev.util.In, net.java.dev.util.Pair and net.java.dev.util.Tandem
+
+jar plus javadoc
+==================
+http://guice-maven.googlecode.com/svn/trunk/rapt/dist/
