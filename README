@@ -9,7 +9,7 @@ language features provided
 
 this library had many different versions, so stuff lived in cvs some in svn, it was extremely hard to manage.
 
-The version attached to the 'No Closure' "article":http://weblogs.java.net/blog/brucechapman/archive/2008/03/anouncement_no.html was not working with eclipse 3.5, so I ended up retrofitting changes back to the original version and the result is this library.
+The version attached to the 'No Closure' article http://weblogs.java.net/blog/brucechapman/archive/2008/03/anouncement_no.html was not working with eclipse 3.5, so I ended up retrofitting features back to the original version and the result is this library.
 
 what works
 =========
