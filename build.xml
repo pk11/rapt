@@ -1,0 +1,177 @@
+<project name="rapt" default="dist">
+    <description>Rapt with Apt</description>
+
+    <property name="src" location="src" />
+    <property name="lib" location="build/lib" />
+    <property name="gen" location="build/gen" />
+    <property name="dist" location="build/dist" />
+    <property name="apidir" location="build/api" />
+    <property name="testsrc" location="test" />
+    <property name="testlib" location="build/testlib" />
+    <property name="testgen" location="build/testgen" />
+
+    <target name="init" depends="">
+        <tstamp />
+        <mkdir dir="${lib}"/>
+        <mkdir dir="${testlib}"/>
+        <mkdir dir="${dist}"/>
+        <mkdir dir="${gen}"/>
+        <mkdir dir="${testgen}"/>
+        <mkdir dir="${apidir}" />
+        <!-- <echoproperties /> -->
+    </target>
+    
+    <target name="compile" depends="init,clean,ant-apt-task">
+        <delete dir="${lib}/META-INF" />
+        <delete dir="${lib}/net" />
+        <delete file="${lib}/*" />
+        <!-- we need to bootstrap LongStrings because some of the others use it -->
+        <javac
+            srcdir="${src}"
+            sourcepath=""
+            destdir="${lib}"
+            classpath="${java.home}/../lib/tools.jar"
+            includeAntRuntime="no"
+            debug="true"
+            fork="yes"
+            >
+            <include name="net/**/generator/*.java" />
+        </javac>
+        <mkdir dir="${lib}/META-INF/services" />
+        <echo
+            file="${lib}/META-INF/services/com.sun.mirror.apt.AnnotationProcessorFactory"
+            append="false" message="net.java.dev.rapt.generator.LongStringAptFactory"
+        />
+
+        <!-- that should have bootstrapped LongStrings - now on with the rest of them -->
+        <apt
+            srcdir="${src}"
+            sourcepath=""
+            destdir="${lib}"
+            gensrcdir="${gen}"
+            classpath="${java.home}/../lib/tools.jar;${lib}"
+            includeAntRuntime="no"
+            debug="true"
+            fork="yes"
+            >
+            <include name="net/**/*.java" />
+            <exclude name="org/**/*.java" />
+            <!-- <exclude name="net/**/exploratory/**/*.java" /> -->
+            <!-- <exclude name="net/**/util/**/*.java" /> -->
+            <compilerarg value="-XPrintFactoryInfo" />
+            <compilerarg value="-XPrintAptRounds" />
+        </apt>
+    </target>
+
+    <target name="apidocs" depends="init" description = " built javadocs">
+        <javadoc
+            destdir="${apidir}"
+            sourcepath="${src}"
+            overview="${src}/overview.html"
+            windowtitle="Rapt Library"
+            header="Built ${TODAY}"
+            >
+            <fileset dir="${src}" defaultexcludes="yes">
+                <include name="net/**/*.java" />
+                <!-- DONT document the Factories, users don't need to know about them -->
+                <exclude name="**/*AptFactory.java"/>
+            </fileset>
+            <doctitle><![CDATA[<h1>Rapt Library</h1>]]></doctitle>
+            <bottom><![CDATA[<i>For news and latest version see <a href="http://rapt.dev.java.net" target="_top">rapt on java.net</i>]]></bottom>
+        </javadoc>
+
+    </target>
+
+    <target name="ant-apt-task" depends="init">
+        <taskdef name="apt"
+            classname="org.cheapa.tools.ant.taskdefs.Apt"
+            />
+    </target>
+    
+    <target name="compile-ant-apt-task"
+            depends="init"
+            description="Compiles the ant apt task into a jar file in the ant lib directory"
+            >
+        <javac compiler="javac1.5" debug="true" srcdir="${src}/org/cheapa" destdir="${lib}"/>
+        <jar jarfile="${ant.library.dir}/ant-apt.jar" basedir="${lib}"/>
+    </target>
+
+    
+    <target name="dist" depends="compile,services,apidocs" description="Build rapt library and docs">
+        <mkdir dir="${dist}/lib"/>
+
+        <!-- Put everything in ${lib} into the MyProject-${DSTAMP}.jar file -->
+        <jar jarfile="${dist}/rapt.jar" basedir="${lib}"/>
+        <zip destfile="${dist}/raptapi.zip" basedir="${apidir}" />
+
+    </target>
+
+    <target name="services" depends="compile">
+        <!--
+        for each AptFactory (identified by the naming pattern) create an entry
+        in the META-INF/services file for AptFactory
+        -->
+        <fileset id="factories" dir="${src}" casesensitive="yes">
+            <include name="**/*AptFactory.java"/>
+        </fileset>
+        <pathconvert
+            property="apt.factory.providers"
+            refid="factories"
+            pathsep="${line.separator}"
+            >
+            <map from="${src}${file.separator}" to="" />
+        </pathconvert>
+        <mkdir dir="${lib}/META-INF/services" />
+        <echo
+            file="${lib}/META-INF/services/com.sun.mirror.apt.AnnotationProcessorFactory"
+            append="false" message="${apt.factory.providers}"
+        />
+        <replace
+            file="${lib}/META-INF/services/com.sun.mirror.apt.AnnotationProcessorFactory"
+            token=".java" value=""
+        />
+        <replace
+            file="${lib}/META-INF/services/com.sun.mirror.apt.AnnotationProcessorFactory"
+            token="${file.separator}" value="."
+        />
+    </target>
+
+    <target name="test" description="Compiles and runs unit tests" depends="init,ant-apt-task">
+        <apt
+            srcdir="${testsrc}"
+            sourcepath=""
+            destdir="${testlib}"
+            gensrcdir="${testgen}"
+            classpath="${java.home}/../lib/tools.jar;${dist}/rapt.jar;${junitjar}"
+            includeAntRuntime="no"
+            debug="true"
+            fork="yes"
+            >
+            <include name="net/**/Test*.java" />
+            <include name="net/**/mixin/*.java" />
+            <exclude name="org/**/*.java" />
+        </apt>
+        <junit
+            printsummary="yes"
+            showoutput="yes"
+            includeAntRuntime="yes"
+            fork="yes"
+            >
+            <classpath>
+                <pathelement location="${testlib}"/>
+                <pathelement location="${junitjar}"/>
+                <pathelement location="${dist}/rapt.jar"/>
+                <pathelement location="${java.home}/../lib/tools.jar"/>
+                <pathelement location="${ant.library.dir}/ant-junit.jar"/>
+            </classpath>
+            <formatter type="plain"/>
+            <sysproperty key="apt.s.dir" value="${testgen}" />
+            <test name="TestLongStringCompiling" />
+            <test name="TestMixins" />
+        </junit>
+    </target>
+
+    <target name="clean" depends="init">
+    </target>
+
+</project>

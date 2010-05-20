@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 1.1.2  (Win32)">
+	<META NAME="CREATED" CONTENT="20041004;22091229">
+	<META NAME="CHANGED" CONTENT="20041004;22203814">
+</HEAD>
+<BODY LANG="en-US" DIR="LTR">
+<P>The Rapt library is a compendium of very small tools sharing a
+common theme of the apt tool new in J2SE 5.0. 
+</P>
+<P>Tools in the Rapt libray have the following lifecycle. 
+</P>
+<DL>
+	<DT>Experimental 
+	</DT><DD STYLE="margin-bottom: 0.5cm">
+	These tools are experimental, they are being evaluated to see
+	firstly if something is possible, and secondly whether it is
+	feasible. 
+	</DD><DD>
+	Experimental tools are not shipped in the binary download, and are
+	only available in source code form. (We might change our minds about
+	that and ship a separate experimental binary. Experimental tools are
+	volatile, and no reliance on them should be made in production code.
+		</DD><DT>
+	Proposed 
+	</DT><DD STYLE="margin-bottom: 0.5cm">
+	Proposed tools have their utility accepted (that is, we think they
+	are useful), and are close to their final form. We really like
+	feedback on proposed tools, and the javadocs should contain a link
+	to a discussion forum where you can comment on them. In some cases
+	we may have some undecided features, we will list these in the
+	javadoc, and we would like to know your views. 
+	</DD><DD>
+	If we change the functionality of a proposed tool, we will make sure
+	it is backward compatible, so your existing code will still work. We
+	will also leave the proposed version as is when we release the
+	version we are happy with. If necessary we will achieve this by
+	issuing a Mark II proposed version in a different package from the
+	newest version that is compatible with the original proposed
+	version. IF we ever do this, we will decide what the package is
+	called and let you know. 
+	</DD><DT>
+	Released 
+	</DT><DD STYLE="margin-bottom: 0.5cm">
+	Released tools are stable and functionally complete in our opinion. 
+	</DD></DL>
+<P>
+The life cycle stage, is represented in the package names 
+</P>
+<UL>
+	<LI><P STYLE="margin-bottom: 0cm"><CODE>net.java.dev.rapt.experimental...
+	</CODE>
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm"><CODE>net.java.dev.rapt.proposed...
+	</CODE>
+	</P>
+	<LI><P><CODE>net.java.dev.rapt.released... </CODE>
+	</P>
+</UL>
+<P>The rapt library consists of 
+</P>
+<DL>
+	<DT>Generators</DT><DD>
+	These are annotations and associated processors which work by
+	automatically generating additional source code (when you source is
+	compiled with apt instead of javac). 
+	</DD><DT>
+	Mirror tools</DT><DD STYLE="margin-bottom: 0.5cm">
+	These are utility classes helpful to those writing their own
+	annotations and processors. 
+	</DD></DL>
+<P>
+<A NAME="compiling"></A>These are represented as the package name
+below the life cycle. eg <CODE>net.java.dev.rapt.proposed.generators</CODE>
+</P>
+<H2>Using Generators</H2>
+<P>Each generator annotation will contain details of what it does and
+how to use its API description. 
+</P>
+<P>Once you have written some code which uses a generator you need to
+do the following. 
+</P>
+<OL>
+	<LI><P STYLE="margin-bottom: 0cm">Compile your code with J2SE 5.0
+	(or later) &quot;apt&quot; tool rather than javac. 
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm">Pass apt all the options you would
+	normally pass to javac to build your code. 
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm">Always specify a directory to
+	place the generated source code in using apt's -s option. (if you
+	don't it generates it in the same directory as the source, which
+	works the first time, but the next time you compile *.java, it
+	compiles the generated source on the first round, then when it
+	compiles the newly generated source in the second round, there is a
+	duplicate class error.</P>
+	<LI><P STYLE="margin-bottom: 0cm">Always specify a destination
+	directory with -d, (even if you dont with javac) otherwise the
+	generated source's class files will be placed in the -s directory,
+	rather than to the same place as your other class files. If the
+	destination is the current directory use -d . 
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm">make sure rapt.jar is on your
+	classpath. 
+	</P>
+	<LI><P>do NOT use apt's -factory option, it will find the annotation
+	Processors automatically. 
+	</P>
+</OL>
+<P>Once you have compiled (successfully) with apt, the generator
+should work as documented. You may view the generated source code if
+you are interested, it will be under the directory specified by the
+-s option.</P>
+<P><BR><BR>
+</P>
+<P>Unless stated, in the Annotation Type API, rapt's processors do
+not need any -A options on the apt command line.</P>
+<P><BR><BR>
+</P>
+</BODY>
+</HTML>

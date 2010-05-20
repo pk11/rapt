@@ -1,0 +1,19 @@
+Fork of Bruce Chapman's rapt library which is using annotation processors to provide language features
+
+language features provided
+==========================
+
+* SAM generation
+* Multiline Strings
+* Pair and Tandem
+
+this library had many different versions, so stuff lived in cvs some in svn, it was extremely hard to manage.
+
+The version attached to the 'No Closure' "article":http://weblogs.java.net/blog/brucechapman/archive/2008/03/anouncement_no.html was not working with eclipse 3.5, so I ended up retrofitting changes back to the original version and the result is this library.
+
+what works
+=========
+* generate SAM type for methods marked with @net.java.dev.rapt.sam.As
+* allow passing parameters by marking parameters with @net.java.dev.rapt.sam.As
+* generate multi-line strings with net.java.dev.generator.LongString 
+* provide net.java.dev.util.In, net.java.dev.util.Pair and net.java.dev.util.Tandem
