@@ -91,8 +91,9 @@ class AsAptProcessor implements AnnotationProcessor {
                     // write importsAndHeader
                     src.format(importsAndHeader, asWhat.getSimpleName());
                     for(ClassDeclaration owner : taggedMethods.keys(pkg,asType)) {
-                        String finalOwner = owner.toString()+" owner";
+                        //String finalOwner = owner.toString()+" owner";
                         for(NameSpace ns : matchUpMethods(asWhat, taggedMethods.values(pkg,asType,owner))) {
+                            String finalOwner = owner.toString()+" owner";
                             StringBuilder methodSrc = new StringBuilder();
                             for(MethodPair pair : ns.methods) {
                                 // generate the method eg
