@@ -10,21 +10,26 @@ language features provided
 motivation
 ==========
 
-The jar attached to the 'No Closure' article http://weblogs.java.net/blog/brucechapman/archive/2008/03/anouncement_no.html was throwing an exception under eclipse 3.5, on top of that rap has multiple versions providing different features while using different APIs, all stored in various places (some of the code was in svn, some in cvs etc.).  So I ended up retrofitting features back to the original version and the result is this library.
+The jar attached to the 'No Closure' article http://weblogs.java.net/blog/brucechapman/archive/2008/03/anouncement_no.html was throwing an exception under eclipse 3.5, on top of that rapt has multiple versions providing different features while using different APIs, all stored in various places (some of the code was in svn, some in cvs etc.).  So I ended up retrofitting features back to the original version and the result is this library.
 
 
 what works
 =========
 
 * generate SAM type for methods marked with @net.java.dev.rapt.sam.As
-* allow passing parameters by marking parameters with @net.java.dev.rapt.sam.As
+* allow passing parameters by marking parameters with @net.java.dev.rapt.sam.As.Additional
 * generate multi-line strings with net.java.dev.rapt.generator.LongString 
 * provide net.java.dev.rapt.util.In, net.java.dev.rapt.util.Pair and net.java.dev.rapt.util.Tandem
 
+please see the javadoc for more information
 
 jar plus javadoc
 ==================
 
 http://guice-maven.googlecode.com/svn/trunk/rapt/dist/
 
+
+installation
+==============
+add rapt.jar to your classpath and configure out as an annotation processor (in eclipse project->java compiler->annotation processor->factory)
 
