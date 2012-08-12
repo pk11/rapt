@@ -33,3 +33,7 @@ installation
 ==============
 add rapt.jar to your classpath and configure out as an annotation processor (in eclipse project->java compiler->annotation processor->factory)
 
+hackig
+======
+ant dist
+

@@ -92,12 +92,12 @@
             depends="init"
             description="Compiles the ant apt task into a jar file in the ant lib directory"
             >
-        <javac compiler="javac1.5" debug="true" srcdir="${src}/org/cheapa" destdir="${lib}"/>
+        <javac compiler="javac1.6" debug="true" srcdir="${src}/org/cheapa" destdir="${lib}"/>
         <jar jarfile="${ant.library.dir}/ant-apt.jar" basedir="${lib}"/>
     </target>
 
     
-    <target name="dist" depends="compile,services,apidocs" description="Build rapt library and docs">
+    <target name="dist" depends="clean, compile-ant-apt-task, init, compile,services,apidocs" description="Build rapt library and docs">
         <mkdir dir="${dist}/lib"/>
 
         <!-- Put everything in ${lib} into the MyProject-${DSTAMP}.jar file -->
